@@ -85,6 +85,52 @@ describe('Compiler', function() {
             expect(jsCode).toMatchSnapshot();
         });
 
+        it('expressions to JS with extended template', function() {
+            const codeParent = stripIndent`
+                <div>{{ msg | default('child will override me') }}</div>
+            `;
+            const codeChild = stripIndent`
+                {% extends './parent.twig' %}
+                {% set msg = 'this is child' %}
+            `;
+
+            const jsTemplateParent = compile(
+                'parent.twig',
+                codeParent,
+                coreExtension,
+                idomPlugin,
+                {
+                    filterMap: {
+                        toCase: 'melody-runtime',
+                        raw: 'melody-runtime',
+                    },
+                    functionMap: {
+                        yay: 'foo',
+                    },
+                }
+            );
+            const jsTemplateChild = compile(
+                'child.twig',
+                codeChild,
+                coreExtension,
+                idomPlugin,
+                {
+                    filterMap: {
+                        toCase: 'melody-runtime',
+                        raw: 'melody-runtime',
+                    },
+                    functionMap: {
+                        yay: 'foo',
+                    },
+                }
+            );
+            const jsCodeParent = toString(jsTemplateParent, codeParent);
+            const jsCodeChild = toString(jsTemplateChild, codeChild);
+
+            expect(jsCodeChild).toMatchSnapshot();
+            expect(jsCodeParent).toMatchSnapshot();
+        });
+
         it('converts map expressions', function() {
             const code = stripIndent`
         {{ {

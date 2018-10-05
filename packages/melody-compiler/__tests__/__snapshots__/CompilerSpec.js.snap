@@ -2384,6 +2384,53 @@ export default function Test(props) {
 }
 `;
 
+exports[`Compiler when converting expressions to JS with extended template 1`] = `
+Object {
+  "code": "import { _template as _parent } from \\"./parent.twig\\";
+import { createSubContext } from \\"melody-runtime\\";
+export const _template = Object.create(_parent);
+
+_template.render = function (_context) {
+  const _context$1 = createSubContext(_context);
+
+  _context$1.msg = \\"this is child\\";
+
+  _parent.render.call(_template, _context$1);
+};
+
+if (process.env.NODE_ENV !== \\"production\\") {
+  _template.displayName = \\"Child\\";
+}
+
+export default function Child(props) {
+  return _template.render(props);
+}",
+  "map": null,
+}
+`;
+
+exports[`Compiler when converting expressions to JS with extended template 2`] = `
+Object {
+  "code": "import { text, elementOpen, elementClose } from \\"melody-idom\\";
+export const _template = {};
+
+_template.render = function (_context) {
+  elementOpen(\\"div\\", null, null);
+  text(_context.msg != null && _context.msg !== '' ? _context.msg : \\"child will override me\\");
+  elementClose(\\"div\\");
+};
+
+if (process.env.NODE_ENV !== \\"production\\") {
+  _template.displayName = \\"Parent\\";
+}
+
+export default function Parent(props) {
+  return _template.render(props);
+}",
+  "map": null,
+}
+`;
+
 exports[`Compiler when converting should support dynamic attributes 1`] = `
 "import { elementOpenStart, elementOpenEnd, attr, skip, elementClose } from \\"melody-idom\\";
 export const _template = {};

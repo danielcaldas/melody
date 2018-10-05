@@ -103,6 +103,7 @@ export class ExtendsStatement extends Node {
     constructor(parentName: Node) {
         super();
         this.parentName = parentName;
+        this.contextFree = false;
     }
 }
 type(ExtendsStatement, 'ExtendsStatement');
